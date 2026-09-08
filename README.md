@@ -65,3 +65,22 @@ Power BI
 Business Insights
     ↓
 Recommendations
+
+Data Preparation
+
+Power Query was used to prepare and validate the datasets before analysis.
+
+Key Steps
+Corrected data types
+Cleaned and transformed source data
+Connected sales data with product and geographic lookup tables
+Created month and day-of-week fields
+Checked missing values and duplicates
+Validated Product ID key matching
+Validated PinCode relationships
+Reviewed city and CityTier mappings
+Kept unresolved geographic values visible rather than assigning assumptions
+Net Units
+
+Net Units were calculated to account for cancelled units:
+   Net Units = Units − Cancelled Units
