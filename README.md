@@ -25,21 +25,21 @@ It demonstrates an end-to-end Data Analyst workflow from raw data preparation to
 
 ## 2. PROJECT WORKFLOW
    Raw Data
-↓
+→
 Power Query
 (Data Cleaning & Transformation)
-↓
+→
 Data Model
 (Relationships & Validation)
-↓
+→
 DAX
 (KPIs & Measures)
-↓
+→
 Power BI
 (Interactive Dashboards)
-↓
+→
 Business Insights
-↓
+→
 Business Recommendations
 
 
