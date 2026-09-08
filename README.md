@@ -66,21 +66,29 @@ Business Insights
     ↓
 Recommendations
 
-Data Preparation
 
-Power Query was used to prepare and validate the datasets before analysis.
 
-Key Steps
-Corrected data types
-Cleaned and transformed source data
-Connected sales data with product and geographic lookup tables
-Created month and day-of-week fields
-Checked missing values and duplicates
-Validated Product ID key matching
-Validated PinCode relationships
-Reviewed city and CityTier mappings
-Kept unresolved geographic values visible rather than assigning assumptions
-Net Units
+## Data Preparation
 
-Net Units were calculated to account for cancelled units:
-   Net Units = Units − Cancelled Units
+The raw retail data was prepared in **Power Query** before building the analytical model.
+
+### Data Cleaning & Transformation
+
+The main preparation steps included:
+
+- Correcting data types for dates, numeric fields, and categorical columns
+- Checking for missing values and duplicate records
+- Connecting the Sales Transactions data with the Product Mapping dataset
+- Connecting transaction data with geographic lookup data using PinCode
+- Validating key matching between `ProductId` and Product Mapping
+- Checking PinCode and City relationships
+- Reviewing CityTier mapping for missing or unmatched values
+- Creating month and day-of-week fields for time-based analysis
+- Creating Net Units to account for cancelled units
+
+### Net Units Calculation
+
+Net Units were derived from gross units after accounting for cancelled units:
+
+```text
+Net Units = Units − Cancelled_Units
