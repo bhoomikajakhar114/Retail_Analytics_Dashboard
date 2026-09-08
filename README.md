@@ -47,48 +47,203 @@ Key fields include:
 ---
 ## Project Workflow
 
+The project follows a structured data analytics workflow, starting from raw retail data and progressing through data preparation, modeling, analysis, visualization, and business recommendations.
+
 ```text
 Raw Data
-    ↓
+   ↓
 Power Query
-(Data Cleaning & Transformation)
-    ↓
+   ↓
+Data Cleaning & Transformation
+   ↓
 Data Model
-(Relationships & Validation)
-    ↓
+   ↓
+Relationships & Validation
+   ↓
 DAX
-(KPIs & Measures)
-    ↓
+   ↓
+KPIs & Measures
+   ↓
 Power BI
-(Interactive Dashboards)
-    ↓
+   ↓
+Interactive Dashboards
+   ↓
 Business Insights
-    ↓
-Recommendations
+   ↓
+Business Recommendations
 
 
+## Business Recommendations
 
-## Data Preparation
+Based on the verified findings from the analysis, the following recommendations can be considered:
 
-The raw retail data was prepared in **Power Query** before building the analytical model.
+### 1. Investigate Cancellation Drivers in North
 
-### Data Cleaning & Transformation
+North has the highest cancellation rate at **31.98%**.
 
-The main preparation steps included:
+Further analysis should focus on identifying cancellation patterns by:
 
-- Correcting data types for dates, numeric fields, and categorical columns
-- Checking for missing values and duplicate records
-- Connecting the Sales Transactions data with the Product Mapping dataset
-- Connecting transaction data with geographic lookup data using PinCode
-- Validating key matching between `ProductId` and Product Mapping
+- Product ID
+- Date
+- Geography
+
+This can help identify specific areas associated with higher cancellation levels.
+
+### 2. Review Cancellation Patterns by Product, Date and Geography
+
+Cancellation performance should be reviewed across Product ID, time period, city, and zone to identify patterns that may require further investigation.
+
+### 3. Plan Inventory and Operations Around Weekend Demand
+
+Saturday has the highest day-of-week revenue at approximately **9.55M**.
+
+Inventory and operational coverage can take stronger weekend demand patterns into consideration.
+
+### 4. Perform Deeper Analysis of South
+
+South has the highest reported revenue at approximately **18.31M**.
+
+Further analysis at the city and Product ID levels can help understand the performance within this zone.
+
+### 5. Improve Product Taxonomy
+
+The Product Mapping dataset contains only one Product Group:
+
+`Tshirts_Men`
+
+Therefore, Product Group comparison is limited. A more detailed product classification structure would enable more meaningful product-group analysis.
+
+### 6. Correct Geographic Lookup Issues
+
+Unresolved and malformed geographic lookup values should be corrected before relying fully on city-tier analysis.
+
+---
+
+# Data Preparation
+
+The raw retail datasets were prepared using **Power Query** before building the analytical model.
+
+## Data Cleaning & Transformation
+
+The main data preparation activities included:
+
+- Correcting data types
+- Checking missing values
+- Checking duplicate records
+- Connecting sales data with Product Mapping
+- Connecting sales data with geographic lookup data
+- Checking key matching between Sales `ProductId` and Product Mapping
 - Checking PinCode and City relationships
-- Reviewing CityTier mapping for missing or unmatched values
-- Creating month and day-of-week fields for time-based analysis
-- Creating Net Units to account for cancelled units
+- Reviewing CityTier mappings
+- Creating month fields for time-based analysis
+- Creating day-of-week fields for demand analysis
+- Creating Net Units
 
-### Net Units Calculation
+### Net Units
 
-Net Units were derived from gross units after accounting for cancelled units:
+Net Units were derived using:
+
+`Net Units = Units - Cancelled_Units`
+
+This measure represents the units remaining after cancelled units are deducted from total units.
+
+## Data Validation
+
+The following key mappings were reviewed during data preparation:
+
+- Sales `ProductId` against Product Mapping `ProductId`
+- Sales `PinCode` against PinCode-Geo `PinCode`
+- PinCode-Geo `City` against CityTier `City`
+- Missing CityTier values
+- Unresolved geographic values
+
+Unresolved geographic values were kept visible rather than assigning guessed values.
+
+---
+
+# Data Model
+
+The cleaned datasets were connected into a **star-schema-style analytical structure**.
+
+## Main Fact Table
+
+### Sales Transactions
+
+The Sales Transactions table acts as the main fact table and contains transaction-level information such as:
+
+- `OrderDate`
+- `UserId`
+- `ProductId`
+- `PinCode`
+- `Revenue`
+- `Units`
+- `Cancelled_Units`
+
+## Lookup / Dimension-Style Tables
+
+### Product Mapping
+
+Contains:
+
+- `ProductId`
+- `ProductGroup`
+
+### PinCode-Geo
+
+Contains:
+
+- `PinCode`
+- `City`
+- `Zone`
+
+### CityTier
+
+Contains:
+
+- `City`
+- `CityTier`
+
+---
+
+# Main Relationships
+
+The main relationships in the analytical model are:
+
+### Product Relationship
+
+`Sales Transactions[ProductId]` → `Product Mapping[ProductId]`
+
+This relationship allows transaction data to be analyzed by product and product group.
+
+### Geographic Relationship
+
+`Sales Transactions[PinCode]` → `PinCode-Geo[PinCode]`
+
+This relationship connects transaction-level data with city and zone information.
+
+### City Tier Relationship
+
+`PinCode-Geo[City]` → `CityTier[City]`
+
+This relationship allows geographic performance to be analyzed by City Tier.
+
+### Model Structure
 
 ```text
-Net Units = Units − Cancelled_Units
+                    Product Mapping
+                         |
+                      ProductId
+                         |
+                         ↓
+                Sales Transactions
+                    (Fact Table)
+                         |
+                      PinCode
+                         |
+                         ↓
+                    PinCode-Geo
+                         |
+                        City
+                         |
+                         ↓
+                     CityTier
