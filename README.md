@@ -70,7 +70,7 @@ Interactive Dashboards
    ↓
 Business Insights
    ↓
-Business Recommendations
+Business Recommendations```
 
 
 ## Business Recommendations
