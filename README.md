@@ -300,6 +300,7 @@ Average reported revenue generated per transaction.
 ---
 ## Author
 Bhoomika Jakhar
+
 Data Analyst | SQL | Excel | Power BI
 
 
